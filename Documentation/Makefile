@@ -1,7 +1,19 @@
 default: build
 
+DIR=$(realpath .)
+
+DIRNAME=$(subst $(dir $(DIR)),,$(DIR))
+
+ifeq ($(DIRNAME),Documentation)
+	BASEDIR=$(realpath $(DIR)/..)
+else
+	BASEDIR=$(DIR)
+endif
+
+
 build:
 	@pdflatex -file-line-error --interaction=nonstopmode -shell-escape *.tex | grep ".*:[0-9]*:.*" && echo Error || echo Success
+	@xelatex -file-line-error --interaction=nonstopmode -shell-escape *.tex | grep ".*:[0-9]*:.*" && echo Error || echo Success
 	@# pdflatex *.tex
 	@# biber mydocument
 	@# pdflatex mydocument.tex
@@ -28,6 +40,7 @@ zip:
 
 abgabe: build prepend_title zip clean
 
+.PHONY: clean abgabe zip prepend_title update show open silent build default
 
 # Clean
 clean:
@@ -43,3 +56,5 @@ clean:
 	-rm -f *.run.xml
 	-rm -f *.blx.bib
 	-rm -f *.zip
+	@echo
+	@$(MAKE) -C $(BASEDIR)/Programs clean | tail -n +2 | head -n -1
