@@ -6,12 +6,12 @@ DIR=$(realpath .)
 DIRNAME=$(subst $(dir $(DIR)),,$(DIR))
 
 ifeq ($(DIRNAME),Documentation)
-	BASEDIR=$(realpath $(DIR)/..)
+	BASEDIR:=$(realpath $(DIR)/..)
 else
-	BASEDIR=$(DIR)
+	BASEDIR:=$(DIR)
 endif
 
-DIR=$(BASEDIR)/Programs
+DIR=$(BASEDIR)/Documentation
 
 # Make Doc
 build:
