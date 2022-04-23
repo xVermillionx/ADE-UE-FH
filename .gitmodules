@@ -1,2 +1,3 @@
 [submodule "Programs"]
 	url = git@github.com:xVermillionx/template-pascal.git
+	path = Programs
