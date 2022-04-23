@@ -1,23 +1,34 @@
-# FLAGS=-Mtp -Criot -gl 
+# Makefile Pascal
+
+DFLAGS=-Mtp -Criot -gl
 INC=-Fu./Units #-Fu./
 
-default: build
+%.bin: %.pas
+	fpc $(FLAGS) $(INC) $< -o$@
 
+# Not Ideal (use top instead...)
+$(patsubst %.pas,%,$(wildcard *.pas)):
+	fpc $(FLAGS) $(INC) $@.pas -o$@.bin
 
-build:
-	for f in *.pas; do fpc $(FLAGS) $(INC) $$f -o$${f%.pas}.bin ; done
+DBG=_debug
+$(patsubst %.pas,%$(DBG),$(wildcard *.pas)):
+	fpc $(DFLAGS) $(INC) $(subst $(DBG),,$@).pas -o$(subst $(DBG),,$@).bin
 
-list:
-	ls -1 *.pas && LIST=($$(ls -1 *.pas)) && read -n 1 && fpc $(FLAGS) $(INC) $${LIST[$$REPLY-1]} -o$${LIST[$$REPLY-1]%.pas}.bin
+RUN=run_
+$(patsubst %.pas,$(RUN)%,$(wildcard *.pas)):
+	$(subst $(RUN),./,$@).bin
 
-cleanabit:
-	rm -f *.o
+.PHONY: clean all
 
-%:
-	fpc $(FLAGS) $(INC) $(@).pas -o$(@).bin
+all: $(patsubst %.pas,%.bin,$(wildcard *.pas))
 
 clean:
-	rm -f Units/*.ppu
+	rm -rf *.o
+	rm -rf *.bin
 	rm -f Units/*.o
-	rm -f *.bin
-	rm -f *.o
+	rm -f Units/*.ppu
+
+# meh
+# %.pas: %.bin
+#		fpc $(FLAGS) $@ -o$<
+
