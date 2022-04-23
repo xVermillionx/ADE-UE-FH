@@ -1,5 +1,6 @@
 default: build
 
+#Dir Magic
 DIR=$(realpath .)
 
 DIRNAME=$(subst $(dir $(DIR)),,$(DIR))
@@ -10,7 +11,9 @@ else
 	BASEDIR=$(DIR)
 endif
 
+DIR=$(BASEDIR)/Programs
 
+# Make Doc
 build:
 	@pdflatex -file-line-error --interaction=nonstopmode -shell-escape *.tex | grep ".*:[0-9]*:.*" && echo Error || echo Success
 	@xelatex -file-line-error --interaction=nonstopmode -shell-escape *.tex | grep ".*:[0-9]*:.*" && echo Error || echo Success
